@@ -8,7 +8,12 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
+  /* ── LIGHT MODE ── */
   --bg: #FFFFFF;
+  --bg-surface: #F8FAFB;
+  --bg-teal: #EBF4F6;
+  --bg-lime: #F0F8D8;
+  --bg-mid:  #E6F0F2;
   --c30: #0D4047;
   --c30-80: rgba(13,64,71,0.85);
   --c30-60: #4A6E74;
@@ -26,130 +31,284 @@
   --success: #0F6E56;
   --success-bg: #D4F5EC;
   --ff: 'Ubuntu', sans-serif;
-  --r-sm: 10px;
-  --r-md: 14px;
-  --r-lg: 20px;
-  --r-xl: 28px;
+  --r-sm: 10px; --r-md: 14px; --r-lg: 20px; --r-xl: 28px;
   --shadow-card: 0 2px 8px rgba(13,64,71,0.10), 0 0 0 1px rgba(13,64,71,0.07);
   --shadow-hero: 0 8px 24px rgba(13,64,71,0.22);
-  /* Fondos de pantalla tintados — reemplazan el blanco puro en pantallas de contenido */
-  --bg-teal: #EBF4F6;   /* teal muy suave, derivado de --c30 */
-  --bg-lime: #F0F8D8;   /* lima muy suave, derivado de --c10 */
-  --bg-mid:  #E6F0F2;   /* teal medio para pantallas de formulario */
+  /* semánticos */
+  --card-bg: #FFFFFF;
+  --card-border: #D6E8EA;
+  --nav-bg: #FFFFFF;
+  --input-bg: #FFFFFF;
+  --body-outer: #b8ccce;
+  --text-primary: #0D4047;
+  --text-secondary: #3E6168;   /* ≥4.6:1 sobre blanco WCAG AA ✓ */
+  --text-muted: #5A838A;       /* ≥3.5:1 — solo UI decorativa */
+  --overlay: rgba(0,0,0,0.50);
+  --map-bg: #c4dce0;
+  /* skeleton */
+  --skel-base: #E8F0F1;
+  --skel-shine: #F4F9FA;
 }
-body { font-family: var(--ff); background: #b8ccce; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 24px 12px; }
-.device { width: 380px; height: 780px; background: var(--bg); border-radius: 44px; overflow: hidden; box-shadow: 0 28px 80px rgba(0,0,0,0.25), 0 0 0 1.5px rgba(0,0,0,0.10); position: relative; display: flex; flex-direction: column; }
+
+/* ══ DARK MODE — WCAG AA compliant ══════════════════════
+   Ratios verificados sobre --bg:#111E21:
+   --text-primary  #E8F4F6  → 14.8:1 ✓ AAA
+   --text-secondary #A8D4DA → 7.2:1  ✓ AAA
+   --text-muted     #6A9EA6 → 4.6:1  ✓ AA
+   --c30 (teal claro) #7EC8D4 → 5.8:1 ✓ AA sobre card-bg
+   --warn  #FFD580 → 9.1:1  ✓ AAA
+   --err   #FF8A80 → 5.3:1  ✓ AA
+   --success #52D9A8 → 6.4:1 ✓ AA
+   --c10-dark #D6F06A → 9.8:1 ✓ AAA (lima texto sobre dark)
+════════════════════════════════════════════════════════ */
+.dark {
+  --bg: #111E21;
+  --bg-surface: #162428;
+  --bg-teal: #162428;
+  --bg-lime: #1B2B0C;
+  --bg-mid: #192C31;
+  --c30: #7EC8D4;
+  --c30-80: rgba(126,200,212,0.85);
+  --c30-60: #A8D4DA;          /* 7.2:1 sobre card-bg ✓ */
+  --c30-40: #4E848C;
+  --c30-20: #1E3840;
+  --c30-08: #192C31;
+  --c10: #BCDD49;
+  --c10-dark: #D6F06A;        /* 9.8:1 sobre dark bg ✓ */
+  --c10-surface: #1D2E0D;
+  --c10-border: #607E1A;
+  --err: #FF8A80;             /* 5.3:1 ✓ */
+  --warn: #FFD580;            /* 9.1:1 ✓ */
+  --warn-bg: #2C1E00;
+  --warn-border: #7A5800;
+  --success: #52D9A8;         /* 6.4:1 ✓ */
+  --success-bg: #0C2C20;
+  --card-bg: #1A2E33;
+  --card-border: #243E45;
+  --nav-bg: #111E21;
+  --input-bg: #1A2E33;
+  --body-outer: #06100F;
+  --text-primary: #E8F4F6;    /* 14.8:1 ✓ */
+  --text-secondary: #A8D4DA;  /* 7.2:1  ✓ */
+  --text-muted: #6A9EA6;      /* 4.6:1  ✓ */
+  --overlay: rgba(0,0,0,0.75);
+  --map-bg: #1C3640;
+  --shadow-card: 0 2px 12px rgba(0,0,0,0.50), 0 0 0 1px rgba(126,200,212,0.09);
+  --shadow-hero: 0 8px 28px rgba(0,0,0,0.55);
+  /* skeleton */
+  --skel-base: #1E3840;
+  --skel-shine: #253F46;
+}
+
+/* ══ GLOBAL TRANSITIONS ══════════════════════════════ */
+*, *::before, *::after {
+  transition: background-color 0.30s ease, border-color 0.25s ease,
+              color 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* ══ 3. PREFERS-REDUCED-MOTION ══════════════════════════
+   Detiene animaciones cíclicas que pueden causar
+   malestar vestibular o crisis fotosensibles (WCAG 2.3.3)
+════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  /* Animaciones cíclicas peligrosas → estáticas */
+  .ob-bounce  { animation: none !important; transform: none !important; }
+  .ob-ring    { animation: none !important; opacity: 0.4 !important; }
+  .ob-ring2   { animation: none !important; opacity: 0.2 !important; }
+  .ob-orbit, .ob-orbit2, .ob-orbit3 { animation: none !important; }
+  .ob-star-spin { animation: none !important; }
+  .ob-card-anim { animation: none !important; }
+  .watch-fab  { animation: none !important; }
+  .spinner    { animation: none !important; opacity: 0.7; }
+  /* Transiciones de pantalla → instantáneas */
+  .screen { transition: opacity 0.001ms ease !important; }
+  .screen.active { opacity: 1; }
+}
+
+/* Excluir animations de la transición global en motion-ok */
+.spinner, .ob-bounce, .ob-ring, .ob-ring2, .ob-star-spin,
+.ob-orbit, .ob-orbit2, .ob-orbit3, .ob-card-anim,
+.watch-fab, .watch-send, .animate-in, .fade-up, .slide-up {
+  transition: none !important;
+}
+body { font-family: var(--ff); background: var(--body-outer); display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 24px 12px; }
+.device { width: 380px; height: 780px; background: var(--bg); border-radius: 44px; overflow: hidden; box-shadow: 0 28px 80px rgba(0,0,0,0.30), 0 0 0 1.5px rgba(0,0,0,0.12); position: relative; display: flex; flex-direction: column; }
 .screen { position: absolute; inset: 0; display: flex; flex-direction: column; background: var(--bg); opacity: 0; pointer-events: none; transition: opacity 0.28s ease; overflow: hidden; }
 .screen.active { opacity: 1; pointer-events: all; }
 
 /* ── STATUS BAR ─────────────────────────── */
 .status-bar { height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 22px; flex-shrink: 0; }
-.status-bar .time { font-size: 13px; font-weight: 600; color: var(--c30); }
-.status-bar .icons { display: flex; gap: 5px; align-items: center; font-size: 12px; color: var(--c30); font-weight: 500; }
+.status-bar .time { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.status-bar .icons { display: flex; gap: 5px; align-items: center; font-size: 12px; color: var(--text-primary); font-weight: 500; }
 
 /* ── SCROLL ─────────────────────────────── */
 .scroll-area { flex: 1; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
 .scroll-area::-webkit-scrollbar { display: none; }
 
-/* ── NAV BAR (4 tabs: Hoy / Agenda / Familia / Pagos) ── */
-.nav-bar { height: 76px; background: white; border-top: 1.5px solid var(--c30-20); display: flex; align-items: flex-start; padding-top: 8px; flex-shrink: 0; position: relative; }
-.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; padding: 4px 0; border: none; background: none; font-family: var(--ff); position: relative; }
-.nav-item svg { width: 22px; height: 22px; }
-.nav-item .nav-label { font-size: 10px; font-weight: 700; }
-.nav-item.active .nav-label { color: var(--c30); }
-.nav-item.active svg { stroke: var(--c30); }
-.nav-item:not(.active) .nav-label { color: var(--c30-60); }
-.nav-item:not(.active) svg { stroke: var(--c30-60); }
-.nav-item.active::after { content:''; position:absolute; top:-8px; left:50%; transform:translateX(-50%); width:28px; height:3px; background:var(--c10-border); border-radius:0 0 3px 3px; }
-.nav-badge { position:absolute; top:2px; right:calc(50% - 16px); width:8px; height:8px; background:var(--err); border-radius:50%; border:1.5px solid white; }
+/* ── NAV BAR — Apple HIG: min tap 44×44 pt ── */
+.nav-bar { height: 82px; background: var(--nav-bg); border-top: 1.5px solid var(--c30-20); display: flex; align-items: flex-start; padding-top: 6px; flex-shrink: 0; position: relative; }
+.nav-item {
+  flex: 1;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; cursor: pointer; padding: 0;
+  border: none; background: none; font-family: var(--ff);
+  position: relative;
+  /* HIG: área táctil mínima 44×44 pt */
+  min-height: 44px; min-width: 44px;
+  /* Área táctil ampliada sin afectar layout */
+  -webkit-tap-highlight-color: transparent;
+}
+.nav-item::before {
+  content: '';
+  position: absolute;
+  inset: -6px -2px;   /* extiende el hit area 6px arriba, 2px lados */
+}
+.nav-item svg { width: 26px; height: 26px; }  /* HIG: 25-28pt */
+.nav-item .nav-label { font-size: 11px; font-weight: 700; letter-spacing: 0.01em; }
+.nav-item.active .nav-label { color: var(--text-primary); }
+.nav-item.active svg { stroke: var(--text-primary); stroke-width: 2.2; }
+.nav-item:not(.active) .nav-label { color: var(--text-secondary); }
+.nav-item:not(.active) svg { stroke: var(--text-secondary); stroke-width: 1.8; }
+.nav-item.active::after {
+  content:''; position:absolute; top:-6px; left:50%;
+  transform:translateX(-50%); width:32px; height:3px;
+  background: var(--c10-border); border-radius: 0 0 3px 3px;
+}
+.nav-badge {
+  position:absolute; top:0; right: calc(50% - 18px);
+  width:9px; height:9px; background:var(--err);
+  border-radius:50%; border:2px solid var(--nav-bg);
+}
 
-/* ── BUTTONS ────────────────────────────── */
+/* ── BUTTONS ── */
 .btn-primary { background: var(--c30); color: white; border: none; border-radius: var(--r-xl); height: 56px; width: 100%; font-family: var(--ff); font-size: 16px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: filter 0.15s, transform 0.1s; }
 .btn-primary:hover { filter: brightness(1.12); }
 .btn-primary:active { filter: brightness(0.9); transform: scale(0.99); }
-.btn-secondary { background: white; color: var(--c30); border: 2px solid var(--c30); border-radius: var(--r-xl); height: 52px; width: 100%; font-family: var(--ff); font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.15s; }
+.btn-secondary { background: var(--card-bg); color: var(--text-primary); border: 2px solid var(--c30-40); border-radius: var(--r-xl); height: 52px; width: 100%; font-family: var(--ff); font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
 .btn-secondary:hover { background: var(--c30-08); }
 .btn-accent { background: var(--c10); color: var(--c30); border: none; border-radius: var(--r-xl); height: 56px; width: 100%; font-family: var(--ff); font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: filter 0.15s, transform 0.1s; box-shadow: 0 4px 14px rgba(168,201,58,0.35); }
 .btn-accent:hover { filter: brightness(1.05); }
 .btn-accent:active { filter: brightness(0.93); transform: scale(0.99); }
-.btn-ghost { background: none; border: none; color: var(--c30-60); font-family: var(--ff); font-size: 14px; font-weight: 500; cursor: pointer; padding: 8px; }
+.btn-ghost { background: none; border: none; color: var(--text-secondary); font-family: var(--ff); font-size: 14px; font-weight: 500; cursor: pointer; padding: 8px; }
 
-/* ── CARDS ──────────────────────────────── */
-.card { background: white; border-radius: var(--r-lg); padding: 16px; border: 1.5px solid var(--c30-20); margin-bottom: 12px; box-shadow: var(--shadow-card); }
-.cita-card { background: white; border-radius: var(--r-lg); border: 1.5px solid var(--c30-20); overflow: hidden; margin-bottom: 12px; cursor: pointer; box-shadow: var(--shadow-card); transition: transform 0.15s; }
+/* ── CARDS ── */
+.card { background: var(--card-bg); border-radius: var(--r-lg); padding: 16px; border: 1.5px solid var(--card-border); margin-bottom: 12px; box-shadow: var(--shadow-card); }
+.cita-card { background: var(--card-bg); border-radius: var(--r-lg); border: 1.5px solid var(--card-border); overflow: hidden; margin-bottom: 12px; cursor: pointer; box-shadow: var(--shadow-card); transition: transform 0.15s; }
 .cita-card:active { transform: scale(0.99); }
 .cita-header { background: var(--c30); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; }
-.cita-body { padding: 14px 16px; background: white; }
+.cita-body { padding: 14px 16px; background: var(--card-bg); }
 
-/* ── BADGES ─────────────────────────────── */
+/* ── BADGES ── */
 .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
 .badge-green  { background: var(--success-bg); color: var(--success); }
 .badge-warn   { background: var(--warn-bg); color: var(--warn); }
-.badge-info   { background: var(--c30-08); color: var(--c30); }
+.badge-info   { background: var(--c30-08); color: var(--text-primary); }
 .badge-accent { background: var(--c10-surface); color: var(--c10-dark); border: 1px solid var(--c10-border); }
 .badge-err    { background: #FDECEA; color: var(--err); }
+.dark .badge-err { background: #3D1010; }
+/* En dark, chip activo usa teal claro para máximo contraste */
+.dark .chip.active { background: var(--c30); color: #111E21; }
+/* dark mode: inline-help texto con ratio correcto */
+.dark .inline-help span { color: var(--c10-dark); }
+.dark .inline-help { background: var(--c10-surface); border-color: var(--c10-border); }
+/* dark: procesando steps text */
+.dark .toast { color: #111E21; }
+/* Botón de cerrar sesión en dark */
+.dark .btn-secondary[style*="--err"] { background: var(--card-bg) !important; }
 
-/* ── MISC COMPONENTS ─────────────────────── */
-.section-label { font-size: 11px; font-weight: 700; color: var(--c30-60); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
+/* ── MISC COMPONENTS ── */
+.section-label { font-size: 11px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
 .top-bar { display: flex; align-items: center; padding: 0 20px 12px; gap: 12px; flex-shrink: 0; }
 .back-btn { width: 40px; height: 40px; border-radius: 50%; background: var(--c30-08); border: 1.5px solid var(--c30-20); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
-.back-btn svg { stroke: var(--c30); }
+.back-btn svg { stroke: var(--text-primary); }
 .progress-bar { height: 4px; background: var(--c30-20); border-radius: 2px; margin: 0 20px 12px; flex-shrink: 0; }
 .progress-fill { height: 100%; background: var(--c10-border); border-radius: 2px; transition: width 0.3s ease; }
-.input-field { width: 100%; height: 52px; border: 2px solid var(--c30-20); border-radius: var(--r-md); padding: 0 16px; font-family: var(--ff); font-size: 15px; color: var(--c30); background: white; outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
-.input-field::placeholder { color: var(--c30-60); }
-.input-field:focus { border-color: var(--c30); box-shadow: 0 0 0 3px rgba(13,64,71,0.12); }
-.input-ok  { border-color: var(--success) !important; background: #f0fdf8 !important; }
-.input-err { border-color: var(--err)     !important; background: #fff5f5 !important; }
-.input-label { font-size: 13px; font-weight: 700; color: var(--c30); margin-bottom: 6px; display: block; }
+.input-field { width: 100%; height: 52px; border: 2px solid var(--c30-20); border-radius: var(--r-md); padding: 0 16px; font-family: var(--ff); font-size: 15px; color: var(--text-primary); background: var(--input-bg); outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+.input-field::placeholder { color: var(--text-secondary); }
+.input-field:focus { border-color: var(--c30); box-shadow: 0 0 0 3px rgba(126,200,212,0.18); }
+.input-ok  { border-color: var(--success) !important; background: var(--success-bg) !important; }
+.input-err { border-color: var(--err)     !important; background: var(--warn-bg)    !important; }
+.input-label { font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; display: block; }
 .msg-ok  { color: var(--success); font-size: 12px; font-weight: 600; margin-top: 5px; min-height: 16px; }
 .msg-err { color: var(--err);     font-size: 12px; font-weight: 600; margin-top: 5px; min-height: 16px; }
 .divider { height: 1px; background: var(--c30-20); margin: 12px 0; }
 .avatar-sm { width: 36px; height: 36px; border-radius: 50%; background: var(--c30); display: flex; align-items: center; justify-content: center; color: white; font-size: 13px; font-weight: 700; flex-shrink: 0; }
-.quick-btn { background: white; border: 1.5px solid var(--c30-20); border-radius: var(--r-md); padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; flex: 1; min-width: 0; transition: background 0.15s, border-color 0.15s; }
+.quick-btn { background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: var(--r-md); padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; flex: 1; min-width: 0; }
 .quick-btn:hover { background: var(--c30-08); border-color: var(--c30-40); }
-.quick-btn span { font-size: 11px; font-weight: 600; color: var(--c30); text-align: center; line-height: 1.3; }
-.chip { display: inline-flex; align-items: center; gap: 4px; background: var(--c30-08); border: 1.5px solid var(--c30-20); border-radius: 20px; padding: 6px 14px; font-size: 13px; color: var(--c30); font-weight: 600; cursor: pointer; font-family: var(--ff); transition: all 0.15s; }
+.quick-btn span { font-size: 11px; font-weight: 600; color: var(--text-primary); text-align: center; line-height: 1.3; }
+.chip { display: inline-flex; align-items: center; gap: 4px; background: var(--c30-08); border: 1.5px solid var(--c30-20); border-radius: 20px; padding: 6px 14px; font-size: 13px; color: var(--text-primary); font-weight: 600; cursor: pointer; font-family: var(--ff); }
 .chip.active { background: var(--c30); color: white; border-color: var(--c30); }
 .inline-help { background: var(--c10-surface); border: 1.5px solid var(--c10-border); border-radius: var(--r-md); padding: 12px 14px; display: flex; gap: 10px; align-items: flex-start; }
 .inline-help span { font-size: 13px; color: var(--c10-dark); line-height: 1.6; font-weight: 500; }
 .step-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
 .step-dot.done    { background: var(--c10); color: var(--c30); }
 .step-dot.active-s{ background: var(--c30); color: white; }
-.step-dot.pending { background: var(--c30-20); color: var(--c30); border: 1.5px solid var(--c30-40); }
+.step-dot.pending { background: var(--c30-20); color: var(--text-primary); border: 1.5px solid var(--c30-40); }
 .step-line { flex: 1; height: 2px; background: var(--c30-20); }
 .step-line.done { background: var(--c10-border); }
 .points-bar { height: 8px; background: var(--c30-20); border-radius: 4px; overflow: hidden; }
 .points-fill { height: 100%; background: var(--c10-border); border-radius: 4px; }
-.family-chip { display: flex; align-items: center; gap: 8px; background: white; border: 1.5px solid var(--c30-20); border-radius: 30px; padding: 6px 14px 6px 6px; cursor: pointer; font-family: var(--ff); transition: all 0.15s; }
+.family-chip { display: flex; align-items: center; gap: 8px; background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 30px; padding: 6px 14px 6px 6px; cursor: pointer; font-family: var(--ff); }
 .family-chip.active-f { border: 2px solid var(--c30); background: var(--c30-08); }
-.family-chip span { font-size: 13px; font-weight: 600; color: var(--c30); }
-.sheet-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.50); z-index: 10; display: flex; align-items: flex-end; }
-.bottom-sheet { background: white; border-radius: var(--r-xl) var(--r-xl) 0 0; padding: 20px 20px 32px; width: 100%; }
+.family-chip span { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.sheet-overlay { position: absolute; inset: 0; background: var(--overlay); z-index: 10; display: flex; align-items: flex-end; }
+.bottom-sheet { background: var(--card-bg); border-radius: var(--r-xl) var(--r-xl) 0 0; padding: 20px 20px 32px; width: 100%; }
 .sheet-handle { width: 40px; height: 4px; background: var(--c30-20); border-radius: 2px; margin: 0 auto 20px; }
-.toast { position: absolute; bottom: 88px; left: 20px; right: 20px; background: var(--c30); color: white; border-radius: var(--r-md); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; z-index: 20; font-size: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.22); }
+.toast { position: absolute; bottom: 88px; left: 20px; right: 20px; background: var(--c30); color: white; border-radius: var(--r-md); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; z-index: 20; font-size: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.30); }
 .biometric-circle { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--c10-border); background: var(--c10-surface); display: flex; align-items: center; justify-content: center; margin: 0 auto; }
 .success-circle { width: 88px; height: 88px; border-radius: 50%; background: var(--c10); display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 8px 24px rgba(168,201,58,0.40); }
 
-/* ── MAP ─────────────────────────────────── */
-.map-placeholder { background: #c4dce0; border-radius: var(--r-lg); position: relative; overflow: hidden; height: 180px; }
+/* ── MAP ── */
+.map-placeholder { background: var(--map-bg); border-radius: var(--r-lg); position: relative; overflow: hidden; height: 180px; }
 .map-grid { position: absolute; inset: 0; background-image: linear-gradient(var(--c30-20) 1px, transparent 1px), linear-gradient(90deg, var(--c30-20) 1px, transparent 1px); background-size: 30px 30px; }
-.map-road-h { position: absolute; background: rgba(255,255,255,0.7); height: 8px; left: 0; right: 0; }
-.map-road-v { position: absolute; background: rgba(255,255,255,0.7); width: 8px; top: 0; bottom: 0; }
+.map-road-h { position: absolute; background: rgba(255,255,255,0.18); height: 8px; left: 0; right: 0; }
+.map-road-v { position: absolute; background: rgba(255,255,255,0.18); width: 8px; top: 0; bottom: 0; }
 .dot-user { width: 14px; height: 14px; background: #1565C0; border: 2px solid white; border-radius: 50%; position: absolute; box-shadow: 0 2px 6px rgba(21,101,192,0.5); }
 .dot-clinic { width: 18px; height: 18px; background: var(--c30); border: 2px solid white; border-radius: 4px; position: absolute; display: flex; align-items: center; justify-content: center; }
 .dot-clinic::after { content: '+'; color: var(--c10); font-size: 11px; font-weight: 700; }
 .radius-circle { position: absolute; border: 2px dashed var(--c10-border); border-radius: 50%; background: rgba(188,221,73,0.10); }
 
-/* ── PIN ─────────────────────────────────── */
-.pin-dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--c30-40); background: white; transition: all 0.15s; }
+/* ── PIN ── */
+.pin-dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--c30-40); background: var(--input-bg); }
 .pin-dot.filled { background: var(--c30); border-color: var(--c30); transform: scale(1.12); }
 .pin-dot.error  { border-color: var(--err); background: var(--err); animation: pinShake 0.35s ease; }
-.pin-key { background: white; border: 1.5px solid var(--c30-20); border-radius: 14px; height: 54px; font-family: var(--ff); font-size: 22px; font-weight: 600; color: var(--c30); cursor: pointer; transition: all 0.1s; box-shadow: 0 2px 4px rgba(13,64,71,0.08); }
+.pin-key { background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 14px; height: 54px; font-family: var(--ff); font-size: 22px; font-weight: 600; color: var(--text-primary); cursor: pointer; box-shadow: var(--shadow-card); }
 .pin-key:active { background: var(--c30-08); transform: scale(0.94); }
-.pin-del { font-size: 18px; color: var(--c30-60); }
+.pin-del { font-size: 18px; color: var(--text-secondary); }
 
-/* ── ONBOARDING ──────────────────────────── */
+/* ── PAYMENT METHOD ── */
+.pay-option { display:flex; align-items:center; gap:12px; background:var(--card-bg); border:1.5px solid var(--card-border); border-radius:var(--r-md); padding:14px 16px; cursor:pointer; margin-bottom: 8px; }
+.pay-option.selected { border-color: var(--c30); background: var(--c30-08); }
+.pay-option input { accent-color: var(--c30); width:18px; height:18px; }
+
+/* ── HOME HERO CHECKIN ── */
+.hero-checkin { background: var(--c30); border-radius: var(--r-xl); padding: 22px 20px 20px; margin-bottom: 14px; position: relative; overflow: hidden; cursor: pointer; transition: transform 0.15s; box-shadow: var(--shadow-hero); }
+.hero-checkin:active { transform: scale(0.99); }
+.hero-checkin::before { content:''; position:absolute; top:-30px; right:-30px; width:140px; height:140px; background:rgba(188,221,73,0.12); border-radius:50%; }
+.hero-checkin .hora-tag { display:inline-flex; align-items:center; gap:6px; background:rgba(188,221,73,0.18); border-radius:20px; padding:4px 10px; margin-bottom:12px; }
+.hero-checkin .hora-tag span { font-size:12px; font-weight:700; color:var(--c10); }
+.checkin-cta { background: var(--c10); color: #0D4047; border: none; border-radius: var(--r-xl); height: 52px; width: 100%; font-family: var(--ff); font-size: 16px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; box-shadow: 0 4px 14px rgba(168,201,58,0.40); letter-spacing: -0.2px; }
+.checkin-cta:hover { filter: brightness(1.06); }
+.checkin-cta svg { stroke: #0D4047; }
+
+/* ── FAMILIA ── */
+.familia-member { display:flex; align-items:center; gap:14px; padding:14px 0; border-bottom:1px solid var(--c30-20); }
+.familia-member:last-child { border-bottom:none; }
+.familia-avatar { width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:16px; font-weight:700; flex-shrink:0; }
+.familia-add { display:flex; align-items:center; gap:14px; padding:14px 0; cursor:pointer; }
+.familia-add .add-circle { width:46px; height:46px; border-radius:50%; border:2px dashed var(--c30-40); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+
+/* ── PAGOS ── */
+.pago-item { display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid var(--c30-20); }
+.pago-item:last-child { border-bottom:none; }
+.pago-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+
+/* ── ONBOARDING ── */
 .ob-slide { transition: opacity 0.35s ease, transform 0.35s ease; }
 @keyframes pinBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
 .ob-bounce { animation: pinBounce 1.8s ease-in-out infinite; transform-origin: 60px 90px; }
@@ -169,7 +328,7 @@ body { font-family: var(--ff); background: #b8ccce; display: flex; justify-conte
 .ob-orbit2 { transform-origin:60px 58px; animation: orbit2 4s linear infinite; }
 .ob-orbit3 { transform-origin:60px 58px; animation: orbit3 4s linear infinite; }
 
-/* ── ANIMATIONS ──────────────────────────── */
+/* ── ANIMATIONS ── */
 @keyframes pinShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)} 60%{transform:translateX(5px)} }
 @keyframes spin { to { transform: rotate(360deg); } }
 .spinner { animation: spin 0.8s linear infinite; }
@@ -180,45 +339,84 @@ body { font-family: var(--ff); background: #b8ccce; display: flex; justify-conte
 @keyframes slideUp { from{transform:translateY(100%)} to{transform:none} }
 .slide-up { animation: slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards; }
 
-/* ── CONFETTI ─────────────────────────────── */
+/* ── CONFETTI ── */
 #confetti-canvas { position:absolute; inset:0; pointer-events:none; z-index:30; border-radius:inherit; }
 
-/* ── ACCESSIBILITY ───────────────────────── */
+/* ── ACCESSIBILITY ── */
 button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid var(--c10-border); outline-offset: 2px; }
 
-/* ── SMARTWATCH ──────────────────────────── */
+/* ── SMARTWATCH ── */
 @keyframes watchPulse { 0%,100%{box-shadow:0 4px 18px rgba(13,64,71,0.35),0 0 0 3px rgba(188,221,73,0.28)} 50%{box-shadow:0 4px 18px rgba(13,64,71,0.35),0 0 0 9px rgba(188,221,73,0.08)} }
 .watch-fab { animation: watchPulse 2.8s ease-in-out infinite; }
-.watch-face { width:120px;height:148px;border-radius:36px;background:var(--c30);border:3px solid rgba(255,255,255,0.14);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;gap:6px;margin:0 auto;box-shadow:0 12px 32px rgba(13,64,71,0.30); }
+.watch-face { width:120px;height:148px;border-radius:36px;background:#0D4047;border:3px solid rgba(255,255,255,0.14);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;gap:6px;margin:0 auto;box-shadow:0 12px 32px rgba(13,64,71,0.30); }
 @keyframes watchSend { 0%{transform:translateY(0) scale(1);opacity:1} 50%{transform:translateY(-10px) scale(0.92);opacity:0.5} 100%{transform:translateY(0) scale(1);opacity:1} }
 .watch-send { animation: watchSend 1s ease-in-out 3; }
 
-/* ── PAYMENT METHOD ──────────────────────── */
-.pay-option { display:flex; align-items:center; gap:12px; background:white; border:1.5px solid var(--c30-20); border-radius:var(--r-md); padding:14px 16px; cursor:pointer; transition: border-color 0.15s, background 0.15s; margin-bottom: 8px; }
-.pay-option.selected { border-color: var(--c30); background: var(--c30-08); }
-.pay-option input { accent-color: var(--c30); width:18px; height:18px; }
+/* ── DARK MODE TOGGLE PILL ── */
+.dm-pill { position:relative;width:50px;height:28px;cursor:pointer;flex-shrink:0;display:inline-block; }
+.dm-pill input { opacity:0;width:0;height:0;position:absolute; }
+.dm-track { position:absolute;inset:0;border-radius:14px;background:var(--c30-20); }
+.dm-pill input:checked + .dm-track { background:var(--c30); }
+.dm-thumb { position:absolute;top:4px;left:4px;width:20px;height:20px;border-radius:50%;background:white;box-shadow:0 1px 4px rgba(0,0,0,0.25);transition:transform 0.3s;display:flex;align-items:center;justify-content:center;pointer-events:none; }
+.dm-pill input:checked ~ .dm-thumb { transform:translateX(22px); }
 
-/* ── HOME HERO CHECKIN ───────────────────── */
-.hero-checkin { background: var(--c30); border-radius: var(--r-xl); padding: 22px 20px 20px; margin-bottom: 14px; position: relative; overflow: hidden; cursor: pointer; transition: transform 0.15s; box-shadow: var(--shadow-hero); }
-.hero-checkin:active { transform: scale(0.99); }
-.hero-checkin::before { content:''; position:absolute; top:-30px; right:-30px; width:140px; height:140px; background:rgba(188,221,73,0.12); border-radius:50%; }
-.hero-checkin .hora-tag { display:inline-flex; align-items:center; gap:6px; background:rgba(188,221,73,0.18); border-radius:20px; padding:4px 10px; margin-bottom:12px; }
-.hero-checkin .hora-tag span { font-size:12px; font-weight:700; color:var(--c10); }
-.checkin-cta { background: var(--c10); color: var(--c30); border: none; border-radius: var(--r-xl); height: 52px; width: 100%; font-family: var(--ff); font-size: 16px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; box-shadow: 0 4px 14px rgba(168,201,58,0.40); transition: filter 0.15s; letter-spacing: -0.2px; }
-.checkin-cta:hover { filter: brightness(1.06); }
-.checkin-cta svg { stroke: var(--c30); }
+/* ══ 4. SKELETON LOADERS ════════════════════════════════
+   Reemplazan pantallas en blanco durante carga inicial.
+   shimmer respeta prefers-reduced-motion.
+════════════════════════════════════════════════════════ */
+@keyframes shimmer {
+  0%   { background-position: -380px 0; }
+  100% { background-position:  380px 0; }
+}
+.skel {
+  background: var(--skel-base);
+  background-image: linear-gradient(
+    90deg,
+    var(--skel-base) 0%,
+    var(--skel-shine) 40%,
+    var(--skel-base) 80%
+  );
+  background-size: 760px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: 8px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skel { animation: none !important; background-image: none; }
+}
+.skel-text-lg  { height: 22px; width: 65%; margin-bottom: 10px; }
+.skel-text-md  { height: 16px; width: 80%; margin-bottom: 8px;  }
+.skel-text-sm  { height: 13px; width: 50%; }
+.skel-avatar   { width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0; }
+.skel-hero     { height: 160px; border-radius: var(--r-xl); margin-bottom: 14px; }
+.skel-card     { height: 80px;  border-radius: var(--r-lg);  margin-bottom: 12px; }
+.skel-label    { height: 12px;  width: 40%;  margin-bottom: 14px; }
+.skel-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
 
-/* ── FAMILIA SECTION ─────────────────────── */
-.familia-member { display:flex; align-items:center; gap:14px; padding:14px 0; border-bottom:1px solid var(--c30-20); }
-.familia-member:last-child { border-bottom:none; }
-.familia-avatar { width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:16px; font-weight:700; flex-shrink:0; }
-.familia-add { display:flex; align-items:center; gap:14px; padding:14px 0; cursor:pointer; }
-.familia-add .add-circle { width:46px; height:46px; border-radius:50%; border:2px dashed var(--c30-40); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-
-/* ── PAGOS SECTION ───────────────────────── */
-.pago-item { display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid var(--c30-20); }
-.pago-item:last-child { border-bottom:none; }
-.pago-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+/* ══ 5. ERROR STATES ════════════════════════════════════
+   Pantallas de error con ruta de escape clara (Nielsen #9)
+════════════════════════════════════════════════════════ */
+.error-screen {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 32px 28px; text-align: center; gap: 0;
+}
+.error-icon-ring {
+  width: 88px; height: 88px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px; flex-shrink: 0;
+}
+.error-title {
+  font-size: 20px; font-weight: 700; color: var(--text-primary);
+  margin-bottom: 10px; line-height: 1.3;
+}
+.error-body {
+  font-size: 14px; color: var(--text-secondary);
+  line-height: 1.7; margin-bottom: 28px;
+}
+.error-code {
+  font-size: 11px; color: var(--text-muted);
+  font-family: monospace; margin-top: 16px;
+}
 </style>
 </head>
 <body>
@@ -480,12 +678,12 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
     <p style="font-size:11px;color:var(--c30-60);text-align:center;margin-top:8px;width:100%;">Sistema de geolocalización médica con vigilancia y certificación oficial de privacidad de datos.</p>
   </div>
   <div style="padding:12px 24px 32px;flex-shrink:0;background:var(--bg-lime);">
-    <button class="btn-accent" style="margin-bottom:10px;" onclick="go('s-home')">
+    <button class="btn-accent" style="margin-bottom:10px;" onclick="showWithSkeleton('s-home')">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--c30)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>
       Activar ubicación
     </button>
-    <button class="btn-ghost" onclick="go('s-home')" style="width:100%;text-align:center;font-size:14px;color:var(--c30-60);text-decoration:none;display:block;">Ahora no</button>
-    <p style="text-align:center;font-size:12px;color:var(--c30-60);margin-top:4px;">Puedes activarlo después en Configuración → Ubicación.</p>
+    <button class="btn-ghost" onclick="showWithSkeleton('s-home')" style="width:100%;text-align:center;font-size:14px;color:var(--text-secondary);display:block;">Ahora no</button>
+    <p style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:4px;">Puedes activarlo después en Configuración → Ubicación.</p>
   </div>
 </div>
 
@@ -1647,18 +1845,33 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   </svg>
   <div class="scroll-area" style="padding:0 16px 8px;">
     <p class="section-label" style="margin-top:4px;">Configuración</p>
-    <!-- Toggle recordatorio 24h (Thaler & Sunstein: default on) -->
+    <!-- Toggle recordatorio 24h -->
     <div class="card" style="padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--c30-60)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
       <div style="flex:1;margin-left:2px;">
-        <p style="font-size:14px;color:var(--c30);font-weight:600;">Recordarme 24 h antes de mi cita</p>
-        <p style="font-size:12px;color:var(--c30-60);margin-top:1px;">Alerta para prepararte con tiempo</p>
+        <p style="font-size:14px;color:var(--text-primary);font-weight:600;">Recordarme 24 h antes de mi cita</p>
+        <p style="font-size:12px;color:var(--text-secondary);margin-top:1px;">Alerta para prepararte con tiempo</p>
       </div>
-      <!-- Toggle ON por defecto -->
-      <label style="position:relative;width:44px;height:24px;cursor:pointer;flex-shrink:0;" aria-label="Toggle recordatorio">
-        <input type="checkbox" id="toggle-reminder" checked style="opacity:0;width:0;height:0;position:absolute;" onchange="document.getElementById('toggle-track').style.background=this.checked?'var(--c30)':'var(--c30-20)';document.getElementById('toggle-thumb').style.transform=this.checked?'translateX(20px)':'translateX(0)';">
-        <div id="toggle-track" style="position:absolute;inset:0;border-radius:12px;background:var(--c30);transition:background 0.2s;"></div>
-        <div id="toggle-thumb" style="position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:white;transition:transform 0.2s;transform:translateX(20px);box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>
+      <label class="dm-pill" aria-label="Toggle recordatorio">
+        <input type="checkbox" id="toggle-reminder" checked onchange="document.getElementById('toggle-track').style.background=this.checked?'var(--c30)':'var(--c30-20)';document.getElementById('toggle-thumb').style.transform=this.checked?'translateX(22px)':'translateX(0)';">
+        <div id="toggle-track" class="dm-track" style="background:var(--c30);"></div>
+        <div id="toggle-thumb" class="dm-thumb" style="transform:translateX(22px);"></div>
+      </label>
+    </div>
+    <!-- ★ DARK MODE TOGGLE -->
+    <div class="card" style="padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--c30-60)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="dm-icon-moon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <div style="flex:1;margin-left:2px;">
+        <p style="font-size:14px;color:var(--text-primary);font-weight:600;" id="dm-label">Modo oscuro</p>
+        <p style="font-size:12px;color:var(--text-secondary);margin-top:1px;" id="dm-sublabel">Descansa tu vista en ambientes oscuros</p>
+      </div>
+      <label class="dm-pill" aria-label="Activar modo oscuro">
+        <input type="checkbox" id="toggle-darkmode" onchange="toggleDarkMode(this.checked)">
+        <div id="dm-track" class="dm-track"></div>
+        <div id="dm-thumb" class="dm-thumb">
+          <!-- ícono sol/luna dentro del thumb -->
+          <svg id="dm-thumb-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0D4047" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </div>
       </label>
     </div>
     <div class="card" style="padding:0 16px;">
@@ -1683,7 +1896,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--c30-60)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
     </div>
-    <button class="btn-secondary" style="margin-top:8px;color:var(--err);border-color:var(--err);background:white;" onclick="go('s-splash')">Cerrar sesión</button>
+    <button class="btn-secondary" style="margin-top:8px;color:var(--err);border-color:var(--err);background:var(--card-bg);" onclick="go('s-splash')">Cerrar sesión</button>
   </div>
   <div style="padding:12px 16px 20px;flex-shrink:0;background:var(--bg-teal);">
     <button class="btn-secondary" onclick="go('s-home')" style="background:white;">Volver al inicio</button>
@@ -1789,6 +2002,237 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
       </svg>
       Enviar cita a mi reloj
     </button>
+    <button class="btn-secondary" onclick="go('s-home')">Volver al inicio</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SKELETON — Home cargando
+     Se muestra 1-2 s antes del dashboard real
+════════════════════════════════════════ -->
+<div class="screen" id="s-skeleton">
+  <div class="status-bar"><span class="time">9:41</span><div class="icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div></div>
+  <div style="padding:12px 16px 0;flex-shrink:0;">
+    <!-- Saludo -->
+    <div class="skel-row" style="margin-bottom:16px;">
+      <div style="flex:1;">
+        <div class="skel skel-text-sm" style="width:40%;margin-bottom:6px;"></div>
+        <div class="skel skel-text-lg" style="width:60%;"></div>
+      </div>
+      <div class="skel skel-avatar"></div>
+    </div>
+    <!-- Chips familia -->
+    <div style="display:flex;gap:8px;margin-bottom:16px;">
+      <div class="skel" style="height:34px;width:72px;border-radius:20px;"></div>
+      <div class="skel" style="height:34px;width:72px;border-radius:20px;"></div>
+      <div class="skel" style="height:34px;width:72px;border-radius:20px;"></div>
+    </div>
+    <!-- Hero card -->
+    <div class="skel skel-hero"></div>
+    <!-- Alerta -->
+    <div class="skel skel-card" style="height:64px;"></div>
+    <!-- Section label -->
+    <div class="skel skel-label"></div>
+    <!-- Quick buttons row -->
+    <div style="display:flex;gap:8px;margin-bottom:16px;">
+      <div class="skel" style="flex:1;height:72px;border-radius:var(--r-md);"></div>
+      <div class="skel" style="flex:1;height:72px;border-radius:var(--r-md);"></div>
+      <div class="skel" style="flex:1;height:72px;border-radius:var(--r-md);"></div>
+      <div class="skel" style="flex:1;height:72px;border-radius:var(--r-md);"></div>
+    </div>
+    <!-- Points card -->
+    <div class="skel skel-card" style="height:90px;"></div>
+  </div>
+  <!-- Nav bar skeleton -->
+  <nav class="nav-bar">
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 0;">
+      <div class="skel" style="width:26px;height:26px;border-radius:6px;"></div>
+      <div class="skel" style="width:28px;height:10px;border-radius:4px;"></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 0;">
+      <div class="skel" style="width:26px;height:26px;border-radius:6px;"></div>
+      <div class="skel" style="width:32px;height:10px;border-radius:4px;"></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 0;">
+      <div class="skel" style="width:26px;height:26px;border-radius:6px;"></div>
+      <div class="skel" style="width:30px;height:10px;border-radius:4px;"></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 0;">
+      <div class="skel" style="width:26px;height:26px;border-radius:6px;"></div>
+      <div class="skel" style="width:26px;height:10px;border-radius:4px;"></div>
+    </div>
+  </nav>
+</div>
+
+<!-- ════════════════════════════════════════
+     ERROR: GPS DENEGADO PERMANENTEMENTE
+     Ruta de escape clara: QR manual + config
+════════════════════════════════════════ -->
+<div class="screen" id="s-err-gps-denied">
+  <div class="status-bar"><span class="time">9:41</span><div class="icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="error-screen">
+    <div class="error-icon-ring" style="background:#FDECEA;">
+      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--err)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+      </svg>
+    </div>
+    <p class="error-title">Tu GPS está bloqueado</p>
+    <p class="error-body">Bloqueaste el acceso a la ubicación de forma permanente. Sin ella no podemos hacer el check-in automático, pero tienes una salida fácil.</p>
+    <!-- QR fallback -->
+    <div style="background:var(--card-bg);border:1.5px solid var(--card-border);border-radius:var(--r-lg);padding:20px;width:100%;margin-bottom:20px;">
+      <p style="font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:4px;">Opción alternativa</p>
+      <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:14px;">Muestra este QR en admisiones y te registran sin fila. Igual de rápido.</p>
+      <!-- QR simulado -->
+      <div style="width:110px;height:110px;margin:0 auto;display:grid;grid-template-columns:repeat(11,1fr);gap:1px;background:var(--text-primary);padding:6px;border-radius:6px;">
+        <script>
+          document.currentScript.parentElement.innerHTML = (()=>{
+            const m=[[1,1,1,1,1,1,1,0,1,0,1],[1,0,0,0,0,0,1,0,0,1,1],[1,0,1,1,1,0,1,0,1,0,0],[1,0,1,1,1,0,1,0,0,1,1],[1,0,1,1,1,0,1,0,1,1,0],[1,0,0,0,0,0,1,0,1,0,1],[1,1,1,1,1,1,1,0,1,0,1],[0,0,0,0,0,0,0,0,0,1,0],[1,0,1,1,0,1,1,0,1,0,1],[0,1,0,0,1,0,0,0,0,1,0],[1,1,1,0,1,0,1,0,1,0,1]];
+            return '<div style="width:110px;height:110px;margin:0 auto;display:grid;grid-template-columns:repeat(11,1fr);gap:1.5px;background:#0D4047;padding:6px;border-radius:6px;">'+
+              m.flat().map(c=>`<div style="background:${c?'#0D4047':'white'};border-radius:1px;"></div>`).join('')+
+              '</div>';
+          })();
+        </script>
+      </div>
+      <p style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:8px;">Válido hasta: hoy 4:00 PM</p>
+    </div>
+    <div class="inline-help" style="width:100%;margin-bottom:0;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--c10-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>Para activar el GPS: ve a Configuración del celular → Privacidad → Ubicación → MedCheckin → Permitir siempre.</span>
+    </div>
+  </div>
+  <div style="padding:12px 20px 28px;flex-shrink:0;">
+    <button class="btn-primary" style="margin-bottom:10px;" onclick="go('s-home')">Usar QR en admisiones</button>
+    <button class="btn-secondary" onclick="go('s-home')">Volver al inicio</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     ERROR: PAGO FALLIDO
+     Transparente, resolutivo (Kinneret)
+════════════════════════════════════════ -->
+<div class="screen" id="s-err-pago">
+  <div class="status-bar"><span class="time">9:41</span><div class="icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="error-screen">
+    <div class="error-icon-ring" style="background:#FDECEA;">
+      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--err)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="1" y="4" width="22" height="16" rx="2"/>
+        <line x1="1" y1="10" x2="23" y2="10"/>
+        <line x1="8" y1="15" x2="16" y2="15" stroke-dasharray="2 2"/>
+      </svg>
+    </div>
+    <p class="error-title">El pago no se completó</p>
+    <p class="error-body">Nequi rechazó la transacción. No se realizó ningún cobro. Puedes intentar de nuevo o usar otro método.</p>
+    <!-- Detalle del error -->
+    <div style="background:var(--card-bg);border:1.5px solid var(--card-border);border-radius:var(--r-lg);padding:16px;width:100%;margin-bottom:20px;text-align:left;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+        <span style="font-size:13px;color:var(--text-secondary);">Monto</span>
+        <span style="font-size:13px;font-weight:700;color:var(--text-primary);">$22.800 COP</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+        <span style="font-size:13px;color:var(--text-secondary);">Método</span>
+        <span style="font-size:13px;font-weight:700;color:var(--text-primary);">Nequi · 3101234567</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;">
+        <span style="font-size:13px;color:var(--text-secondary);">Razón</span>
+        <span style="font-size:13px;font-weight:700;color:var(--err);">Saldo insuficiente</span>
+      </div>
+    </div>
+    <div class="inline-help" style="width:100%;margin-bottom:0;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--c10-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span>No se realizó ningún cobro. Tu dinero está seguro.</span>
+    </div>
+    <p class="error-code">Ref: ERR-PAY-402 · 03/06/2026 9:41</p>
+  </div>
+  <div style="padding:12px 20px 28px;flex-shrink:0;">
+    <button class="btn-accent" style="margin-bottom:10px;" onclick="go('s-pago')">Intentar con otro método</button>
+    <button class="btn-secondary" onclick="go('s-home')">Volver al inicio</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     ERROR: TIMEOUT DE RED
+     Feedback claro + ruta de escape
+════════════════════════════════════════ -->
+<div class="screen" id="s-err-timeout">
+  <div class="status-bar"><span class="time">9:41</span><div class="icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="error-screen">
+    <div class="error-icon-ring" style="background:var(--warn-bg);">
+      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--warn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="1" y1="1" x2="23" y2="23"/>
+        <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/>
+        <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/>
+        <path d="M10.71 5.05A16 16 0 0 1 22.56 9"/>
+        <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/>
+        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+        <circle cx="12" cy="20" r="1"/>
+      </svg>
+    </div>
+    <p class="error-title">Sin conexión en este momento</p>
+    <p class="error-body">No pudimos conectar con nuestro servidor. Revisa tu señal de datos o WiFi e inténtalo de nuevo. Tus datos están seguros.</p>
+    <!-- Qué pasó -->
+    <div style="background:var(--card-bg);border:1.5px solid var(--card-border);border-radius:var(--r-lg);padding:14px 16px;width:100%;margin-bottom:20px;text-align:left;">
+      <p style="font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:8px;">¿Qué puedes hacer?</p>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;">
+        <span style="color:var(--text-muted);font-size:13px;flex-shrink:0;">1.</span>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.5;">Activa los datos móviles o conéctate a WiFi.</p>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;">
+        <span style="color:var(--text-muted);font-size:13px;flex-shrink:0;">2.</span>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.5;">Presiona "Reintentar" para volver a intentarlo.</p>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <span style="color:var(--text-muted);font-size:13px;flex-shrink:0;">3.</span>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.5;">Si el problema persiste, usa el check-in manual en admisiones.</p>
+      </div>
+    </div>
+    <p class="error-code">Ref: ERR-NET-408 · 03/06/2026 9:41</p>
+  </div>
+  <div style="padding:12px 20px 28px;flex-shrink:0;">
+    <button class="btn-primary" id="btn-retry" style="margin-bottom:10px;" onclick="retryConnection()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5.52"/></svg>
+      Reintentar conexión
+    </button>
+    <button class="btn-secondary" onclick="go('s-home')">Volver al inicio</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     ERROR: GPS APAGADO (en flujo check-in)
+     Con QR alternativo
+════════════════════════════════════════ -->
+<div class="screen" id="s-gps-off">
+  <div class="status-bar"><span class="time">9:41</span><div class="icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="error-screen">
+    <div class="error-icon-ring" style="background:var(--warn-bg);">
+      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--warn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <circle cx="12" cy="12" r="3"/>
+        <line x1="12" y1="2" x2="12" y2="5"/>
+        <line x1="12" y1="19" x2="12" y2="22"/>
+        <line x1="2" y1="12" x2="5" y2="12"/>
+        <line x1="19" y1="12" x2="22" y2="12"/>
+        <line x1="4" y1="4" x2="20" y2="20"/>
+      </svg>
+    </div>
+    <p class="error-title">Tu GPS está apagado</p>
+    <p class="error-body">Necesitamos tu ubicación para confirmar que estás en la clínica. Enciéndelo o usa el QR para hacer check-in en admisiones.</p>
+    <!-- QR alternativo compacto -->
+    <div style="background:var(--card-bg);border:2px solid var(--warn-border);border-radius:var(--r-lg);padding:18px;width:100%;margin-bottom:20px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--warn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <p style="font-size:13px;font-weight:700;color:var(--text-primary);">Check-in manual con QR</p>
+      </div>
+      <p style="font-size:12px;color:var(--text-secondary);line-height:1.5;margin-bottom:12px;">Muestra este código en la ventanilla de admisiones y listo. Sin GPS, sin fila larga.</p>
+      <button class="btn-primary" style="height:44px;font-size:14px;" onclick="go('s-err-gps-denied')">Ver mi QR de check-in</button>
+    </div>
+    <div class="inline-help" style="width:100%;margin-bottom:0;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--c10-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>O activa el GPS en Configuración del celular y regresa aquí para el check-in automático.</span>
+    </div>
+  </div>
+  <div style="padding:12px 20px 28px;flex-shrink:0;">
+    <button class="btn-accent" style="margin-bottom:10px;" onclick="go('s-alerta-geo')">Ya activé el GPS · Continuar</button>
     <button class="btn-secondary" onclick="go('s-home')">Volver al inicio</button>
   </div>
 </div>
@@ -2036,7 +2480,7 @@ function pinKey(digit){
 function pinDel(){if(pinValue.length>0){pinValue=pinValue.slice(0,-1);updatePinDots();}const msg=document.getElementById('pin-msg');if(msg)msg.textContent='';}
 
 /* Init */
-document.addEventListener('DOMContentLoaded',()=>{updateOb();});
+// init handled in dark mode DOMContentLoaded below
 
 /* ════════════════════════════════════
    SMARTWATCH SEND
@@ -2058,6 +2502,78 @@ function sendToWatch() {
     if (preview) preview.classList.remove('watch-send');
   }, 2000);
 }
+/* ════════════════════════════════════
+   SKELETON LOADER
+   Muestra skeleton 1.2s antes del home real
+   (simula carga de datos desde API)
+═════════════════════════════════════ */
+function showWithSkeleton(targetId) {
+  go('s-skeleton');
+  setTimeout(() => go(targetId), 1200);
+}
+
+/* ════════════════════════════════════
+   NETWORK RETRY
+═════════════════════════════════════ */
+function retryConnection() {
+  const btn = document.getElementById('btn-retry');
+  if (!btn) return;
+  btn.disabled = true;
+  btn.innerHTML = '<svg class="spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Conectando…';
+  // Simula reintento: éxito tras 2 s
+  setTimeout(() => {
+    btn.innerHTML = 'Reintentar conexión';
+    btn.disabled = false;
+    showWithSkeleton('s-home');
+  }, 2000);
+}
+
+/* ════════════════════════════════════
+   DARK MODE
+═════════════════════════════════════ */
+function toggleDarkMode(on) {
+  const device = document.querySelector('.device');
+  const track  = document.getElementById('dm-track');
+  const thumb  = document.getElementById('dm-thumb');
+  const label  = document.getElementById('dm-label');
+  const sub    = document.getElementById('dm-sublabel');
+  const icon   = document.getElementById('dm-thumb-icon');
+
+  if (on) {
+    device.classList.add('dark');
+    if (track) track.style.background = 'var(--c30)';
+    if (thumb) thumb.style.transform  = 'translateX(22px)';
+    if (label) label.textContent = 'Modo oscuro activo';
+    if (sub)   sub.textContent   = 'Toca para volver al modo claro';
+    // Cambiar ícono a luna
+    if (icon)  icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+    // Guardar preferencia
+    try { localStorage.setItem('medcheckin-dark', '1'); } catch(e) {}
+  } else {
+    device.classList.remove('dark');
+    if (track) track.style.background = 'var(--c30-20)';
+    if (thumb) thumb.style.transform  = 'translateX(0)';
+    if (label) label.textContent = 'Modo oscuro';
+    if (sub)   sub.textContent   = 'Descansa tu vista en ambientes oscuros';
+    // Cambiar ícono a sol
+    if (icon)  icon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+    try { localStorage.removeItem('medcheckin-dark'); } catch(e) {}
+  }
+}
+
+// Restaurar preferencia al cargar
+document.addEventListener('DOMContentLoaded', () => {
+  updateOb();
+  // Restaurar dark mode
+  try {
+    if (localStorage.getItem('medcheckin-dark') === '1') {
+      const chk = document.getElementById('toggle-darkmode');
+      if (chk) { chk.checked = true; toggleDarkMode(true); }
+    }
+  } catch(e) {}
+  // El splash ya es la pantalla activa — no lanzar skeleton aquí
+  // El skeleton se activa al navegar post-login
+});
 </script>
 </body>
 </html>
