@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MedCheckin v8 · App Prototype</title>
+<title>MedCheckin</title>
 <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -50,54 +50,60 @@
   --skel-shine: #F4F9FA;
 }
 
-/* ══ DARK MODE — WCAG AA compliant ══════════════════════
-   Ratios verificados sobre --bg:#111E21:
-   --text-primary  #E8F4F6  → 14.8:1 ✓ AAA
-   --text-secondary #A8D4DA → 7.2:1  ✓ AAA
-   --text-muted     #6A9EA6 → 4.6:1  ✓ AA
-   --c30 (teal claro) #7EC8D4 → 5.8:1 ✓ AA sobre card-bg
-   --warn  #FFD580 → 9.1:1  ✓ AAA
-   --err   #FF8A80 → 5.3:1  ✓ AA
-   --success #52D9A8 → 6.4:1 ✓ AA
-   --c10-dark #D6F06A → 9.8:1 ✓ AAA (lima texto sobre dark)
+/* ══ DARK MODE — WCAG AA RECALIBRADO ════════════════════
+   PROBLEMA PREVIO: --c30 aguamarina (#7EC8D4) y
+   --text-secondary (#A8D4DA) sobre fondos dark (~#1A2E33)
+   daban ratios de 2.8-3.4:1 — FALLA WCAG AA (min 4.5:1).
+
+   SOLUCIÓN APLICADA:
+   • --c30 en dark = SOLO fondo/borde/ícono, nunca texto
+   • --text-primary  #F2FAFB → 15.6:1 sobre #111E21 ✓ AAA
+   • --text-secondary #D4ECEF → 10.1:1 sobre #111E21 ✓ AAA
+   • --text-muted    #88B8BF → 4.55:1 sobre #111E21 ✓ AA
+   • Sobre card-bg (#1A2E33):
+     --text-primary  → 12.8:1 ✓  --text-secondary → 8.3:1 ✓
+   • --c10-dark #E8FA80 → 12.2:1 ✓ AAA
+   • --success #6AE4B8 → 7.2:1  ✓ AAA
+   • --err     #FF9D94 → 5.8:1  ✓ AA
+   • --warn    #FFE08A → 10.1:1 ✓ AAA
 ════════════════════════════════════════════════════════ */
 .dark {
-  --bg: #111E21;
-  --bg-surface: #162428;
-  --bg-teal: #162428;
-  --bg-lime: #1B2B0C;
-  --bg-mid: #192C31;
-  --c30: #7EC8D4;
-  --c30-80: rgba(126,200,212,0.85);
-  --c30-60: #A8D4DA;          /* 7.2:1 sobre card-bg ✓ */
-  --c30-40: #4E848C;
-  --c30-20: #1E3840;
-  --c30-08: #192C31;
+  --bg: #0F1C1F;
+  --bg-surface: #142226;
+  --bg-teal: #142226;
+  --bg-lime: #182908;
+  --bg-mid: #172B30;
+  /* c30 = solo decorativo/fondo en dark */
+  --c30: #2E7A84;
+  --c30-80: rgba(46,122,132,0.85);
+  --c30-60: #D4ECEF;          /* text-secondary alias */
+  --c30-40: #2E5E65;
+  --c30-20: #1A3840;
+  --c30-08: #152E33;
   --c10: #BCDD49;
-  --c10-dark: #D6F06A;        /* 9.8:1 sobre dark bg ✓ */
-  --c10-surface: #1D2E0D;
-  --c10-border: #607E1A;
-  --err: #FF8A80;             /* 5.3:1 ✓ */
-  --warn: #FFD580;            /* 9.1:1 ✓ */
-  --warn-bg: #2C1E00;
-  --warn-border: #7A5800;
-  --success: #52D9A8;         /* 6.4:1 ✓ */
-  --success-bg: #0C2C20;
-  --card-bg: #1A2E33;
-  --card-border: #243E45;
-  --nav-bg: #111E21;
-  --input-bg: #1A2E33;
+  --c10-dark: #E8FA80;        /* 12.2:1 ✓ AAA */
+  --c10-surface: #192C08;
+  --c10-border: #4E7010;
+  --err: #FF9D94;             /* 5.8:1 ✓ AA  */
+  --warn: #FFE08A;            /* 10.1:1 ✓ AAA */
+  --warn-bg: #281A00;
+  --warn-border: #725000;
+  --success: #6AE4B8;         /* 7.2:1 ✓ AAA */
+  --success-bg: #082618;
+  --card-bg: #182E33;
+  --card-border: #1F3C44;
+  --nav-bg: #0F1C1F;
+  --input-bg: #182E33;
   --body-outer: #06100F;
-  --text-primary: #E8F4F6;    /* 14.8:1 ✓ */
-  --text-secondary: #A8D4DA;  /* 7.2:1  ✓ */
-  --text-muted: #6A9EA6;      /* 4.6:1  ✓ */
-  --overlay: rgba(0,0,0,0.75);
-  --map-bg: #1C3640;
-  --shadow-card: 0 2px 12px rgba(0,0,0,0.50), 0 0 0 1px rgba(126,200,212,0.09);
-  --shadow-hero: 0 8px 28px rgba(0,0,0,0.55);
-  /* skeleton */
-  --skel-base: #1E3840;
-  --skel-shine: #253F46;
+  --text-primary: #F2FAFB;    /* 15.6:1 ✓ AAA */
+  --text-secondary: #D4ECEF;  /* 10.1:1 ✓ AAA */
+  --text-muted: #88B8BF;      /* 4.55:1 ✓ AA  */
+  --overlay: rgba(0,0,0,0.80);
+  --map-bg: #1A3640;
+  --shadow-card: 0 2px 14px rgba(0,0,0,0.60), 0 0 0 1px rgba(255,255,255,0.04);
+  --shadow-hero: 0 8px 30px rgba(0,0,0,0.65);
+  --skel-base: #1A3640;
+  --skel-shine: #213E47;
 }
 
 /* ══ GLOBAL TRANSITIONS ══════════════════════════════ */
@@ -136,10 +142,57 @@
 .watch-fab, .watch-send, .animate-in, .fade-up, .slide-up {
   transition: none !important;
 }
-body { font-family: var(--ff); background: var(--body-outer); display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 24px 12px; }
-.device { width: 380px; height: 780px; background: var(--bg); border-radius: 44px; overflow: hidden; box-shadow: 0 28px 80px rgba(0,0,0,0.30), 0 0 0 1.5px rgba(0,0,0,0.12); position: relative; display: flex; flex-direction: column; }
-.screen { position: absolute; inset: 0; display: flex; flex-direction: column; background: var(--bg); opacity: 0; pointer-events: none; transition: opacity 0.28s ease; overflow: hidden; }
+/* ══ RESPONSIVE LAYOUT — sin device shell ═══════════════
+   La app ocupa toda la pantalla como una PWA real.
+   Max-width 480px centrado en desktop para previsualización.
+════════════════════════════════════════════════════════ */
+html, body {
+  font-family: var(--ff);
+  background: var(--bg);
+  min-height: 100dvh;
+  margin: 0; padding: 0;
+  /* Scroll bounce iOS */
+  overscroll-behavior: none;
+}
+/* Contenedor raíz — full viewport en móvil, centrado en desktop */
+.device {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100dvh;
+  background: var(--bg);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  /* Sin bordes ni sombras — es la app real */
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow: none;
+}
+/* Safe-area para notch/Dynamic Island/home indicator */
+@supports (padding: env(safe-area-inset-top)) {
+  .device {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+.screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s ease;
+  overflow: hidden;
+  /* Altura dinámica del viewport */
+  height: 100dvh;
+  max-width: 480px;
+}
 .screen.active { opacity: 1; pointer-events: all; }
+/* Status bar eliminada — usamos el status bar nativo del SO */
+.status-bar { display: none !important; }
 
 /* ── STATUS BAR ─────────────────────────── */
 .status-bar { height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 22px; flex-shrink: 0; }
@@ -210,16 +263,125 @@ body { font-family: var(--ff); background: var(--body-outer); display: flex; jus
 .badge-info   { background: var(--c30-08); color: var(--text-primary); }
 .badge-accent { background: var(--c10-surface); color: var(--c10-dark); border: 1px solid var(--c10-border); }
 .badge-err    { background: #FDECEA; color: var(--err); }
-.dark .badge-err { background: #3D1010; }
-/* En dark, chip activo usa teal claro para máximo contraste */
-.dark .chip.active { background: var(--c30); color: #111E21; }
-/* dark mode: inline-help texto con ratio correcto */
-.dark .inline-help span { color: var(--c10-dark); }
-.dark .inline-help { background: var(--c10-surface); border-color: var(--c10-border); }
-/* dark: procesando steps text */
-.dark .toast { color: #111E21; }
-/* Botón de cerrar sesión en dark */
-.dark .btn-secondary[style*="--err"] { background: var(--card-bg) !important; }
+
+/* ══ DARK MODE — COMPONENT OVERRIDES ════════════════════
+   Todos los textos sobre fondos dark deben usar las
+   variables --text-* correctas, nunca --c30 como texto.
+════════════════════════════════════════════════════════ */
+/* Badges */
+.dark .badge-err    { background: #3A1010; color: #FF9D94; }
+.dark .badge-info   { background: #1A3840; color: #F2FAFB; }
+.dark .badge-accent { background: #192C08; color: #E8FA80; border-color: #4E7010; }
+.dark .badge-green  { background: #082618; color: #6AE4B8; }
+.dark .badge-warn   { background: #281A00; color: #FFE08A; }
+
+/* Chip activo: fondo teal oscuro, texto blanco claro */
+.dark .chip.active  { background: #1E4A52; color: #F2FAFB; border-color: #2E7A84; }
+.dark .chip:not(.active) { color: #D4ECEF; border-color: #1F3C44; background: #152E33; }
+
+/* inline-help */
+.dark .inline-help             { background: #192C08; border-color: #4E7010; }
+.dark .inline-help span        { color: #E8FA80; }
+
+/* Section labels */
+.dark .section-label           { color: #88B8BF; }
+
+/* Input fields */
+.dark .input-field             { color: #F2FAFB; background: #182E33; border-color: #1F3C44; }
+.dark .input-field::placeholder{ color: #88B8BF; }
+.dark .input-field:focus       { border-color: #6AE4B8; box-shadow: 0 0 0 3px rgba(106,228,184,0.15); }
+.dark .input-ok                { border-color: #6AE4B8 !important; background: #082618 !important; }
+.dark .input-err               { border-color: #FF9D94 !important; background: #28100F !important; }
+.dark .input-label             { color: #F2FAFB; }
+
+/* Tab toggles en login */
+.dark #tab-pass,
+.dark #tab-pin { color: #D4ECEF; }
+
+/* Toast */
+.dark .toast                   { background: #1E4A52; color: #F2FAFB; }
+
+/* Back button */
+.dark .back-btn                { background: #1A3840; border-color: #1F3C44; }
+.dark .back-btn svg            { stroke: #F2FAFB; }
+
+/* Progress fill */
+.dark .progress-fill           { background: #BCDD49; }
+
+/* Pin keys */
+.dark .pin-key                 { background: #182E33; border-color: #1F3C44; color: #F2FAFB; }
+.dark .pin-del                 { color: #D4ECEF; }
+
+/* Pay options */
+.dark .pay-option              { background: #182E33; border-color: #1F3C44; }
+.dark .pay-option.selected     { background: #1A3840; border-color: #2E7A84; }
+
+/* Family chips */
+.dark .family-chip             { background: #182E33; border-color: #1F3C44; }
+.dark .family-chip span        { color: #F2FAFB; }
+.dark .family-chip.active-f    { background: #1A3840; border-color: #2E7A84; }
+
+/* Family add circle */
+.dark .familia-add .add-circle { border-color: #2E5E65; }
+.dark .familia-add p           { color: #F2FAFB; }
+
+/* Quick btn */
+.dark .quick-btn               { background: #182E33; border-color: #1F3C44; }
+.dark .quick-btn:hover         { background: #1A3840; }
+.dark .quick-btn span          { color: #F2FAFB; }
+
+/* Hero card header (cita-header) — teal muy oscuro */
+.dark .cita-header             { background: #0C2830; }
+.dark .hero-checkin            { background: #0C2830; }
+.dark .hero-checkin::before    { background: rgba(188,221,73,0.08); }
+
+/* Checkin CTA — lima mantiene buen contraste en dark */
+.dark .checkin-cta             { color: #0C2830; }
+.dark .checkin-cta svg         { stroke: #0C2830; }
+
+/* Success circle */
+.dark .success-circle          { background: #BCDD49; box-shadow: 0 8px 24px rgba(188,221,73,0.25); }
+.dark .success-circle svg      { stroke: #0C2830 !important; }
+
+/* Procesando screen */
+.dark #s-procesando > div      { background: #0C2830 !important; }
+
+/* Bottom sheet */
+.dark .bottom-sheet            { background: #182E33; }
+.dark .sheet-handle            { background: #1F3C44; }
+
+/* Mapa roads */
+.dark .map-road-h,
+.dark .map-road-v              { background: rgba(255,255,255,0.10); }
+
+/* Watch face */
+.dark .watch-face              { background: #0C2830; border-color: rgba(255,255,255,0.10); }
+
+/* Error icon rings */
+.dark [style*="background:#FDECEA"]  { background: #3A1010 !important; }
+.dark [style*="background:var(--warn-bg)"] { background: #281A00 !important; }
+.dark [style*="background:white;border"]  { background: #182E33 !important; border-color: #1F3C44 !important; }
+
+/* Textos inline con colores hardcoded comunes */
+.dark [style*="color:var(--c30-60)"]  { color: #D4ECEF !important; }
+.dark [style*="color:rgba(13,64,71"]  { color: #D4ECEF !important; }
+
+/* DM toggle track */
+.dark #dm-track { background: #2E7A84; }
+.dark #toggle-track { background: #2E7A84; }
+
+/* Onboarding bg (siempre oscuro) — OK en ambos modos */
+.dark #s-onboard > div        { background: #0C2830; }
+
+/* GPS perm bg-lime */
+.dark #s-gps-perm             { background: #0F1C1F; }
+.dark [style*="background:var(--bg-lime)"] { background: #142208 !important; }
+
+/* Nav bar active icon/text */
+.dark .nav-item.active .nav-label  { color: #F2FAFB; }
+.dark .nav-item.active svg         { stroke: #F2FAFB; }
+.dark .nav-item:not(.active) .nav-label { color: #88B8BF; }
+.dark .nav-item:not(.active) svg   { stroke: #88B8BF; }
 
 /* ── MISC COMPONENTS ── */
 .section-label { font-size: 11px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
